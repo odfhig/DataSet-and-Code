@@ -59,8 +59,8 @@ signal_1_denoise = denoisesignal(signal_1_sync, reference_signal, fs);
 signal_2_denoise = denoisesignal(signal_2_sync, reference_signal, fs);
 
 
-[near, near_energy] = getrange(signal_1_denoise(1 : 480), reference_signal);
-[far, far_energy] = getrange(signal_2_denoise(1 : 480), reference_signal);
+[near, near_energy] = get_range_and_energy(signal_1_denoise(1 : 480), reference_signal);
+[far, far_energy] = get_range_and_energy(signal_2_denoise(1 : 480), reference_signal);
 
 
 
