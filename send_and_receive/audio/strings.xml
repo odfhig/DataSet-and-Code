@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">audio demo</string>
+
+
+    <string name="start_record">开始录音</string>
+    <string name="stop_record">停止录音</string>
+    <string name="start_play">播放</string>
+    <string name="stop_play">停止</string>
+    <string name="call">听筒</string>
+    <string name="open">扬声器</string>
+</resources>
