@@ -70,6 +70,13 @@ signal_2_denoise = denoisesignal(signal_2_sync, reference_signal, fs);
 
 for ii = 1 : length(signal_match_filter)
     range_com{ii} = range_compensation(signal_match_filter{ii}, reference_signal, range_reference);
+    energy_com{ii} = com_energy(range_com{ii}, near, far, near_energy, far_energy);
+end
+
+%% feature exraction
+
+for ii = 1 : length(energy_com)
+    fea{ii} = feature_extraction(energy_com(ii));
 end
 
 

@@ -1,0 +1,105 @@
+function fea = feature_extraction(data)
+    data = reshape(data, 480, []);
+    fea = zeros(26, size(data, 2));
+
+    %% range features
+    range = zeros(1, 6);
+    ii = 1;
+    for idx = 1 : size(data, 2)
+        [pks, loc] = findpeaks(data(:, idx));
+        [maxpeaks, ~] = max(peaks);
+        pks(pks < 0.5 * maxpeaks) = 0;
+        for idx2 = 1 : length(pks)
+            if pks(idx2) > 0
+                range(ii) = loc(idx2);
+                ii = ii + 1;
+            end
+            if ii > 6
+                break;
+            end
+        end
+        ii = 1;
+        for jj = 1 : 6
+            for kk = jj + 1 : 6
+                fea(ii, idx) = abs(range(jj) - range(kk)) / 48000 * 34000 / 2;
+                ii = ii + 1;
+            end
+        end
+
+        for jj = 1 : 6
+            for kk = 1 : 10
+                if data(range(jj) - kk, idx) < 0.5 * data(range(jj), id)
+                    st_point = range(jj) - kk;
+                    break;
+                end
+            end
+            for kk = 1 : 10
+                if data(range(jj) + kk, idx)
+            end
+        end
+
+    end
+
+
+
+    %% energy features
+    %%average energy and max energy
+    maxPow = zeros(1, size(data, 2));
+    averagePow = zeros(1, size(data, 2));
+
+    for idx = 1 : size(data, 2)
+        averagePow(idx) = mean(data(:, idx));
+        maxPow(idx) = max(data(:, idx));
+    end
+    fea(21, :) = maxPow;
+    fea(22, :) = averagePow;
+
+%     passZero = zeros(1, size(data, 2));
+%     for idx = 1 : size(data, 2)
+%         for idx2 = 1 : 29
+%             if data(idx2, idx) * data(idx2 + 1, idx) < 0
+%                 passZero(idx) = passZero(idx) + 1;
+%             end
+%         end
+%     end
+%     fea(23, :) = passZero;
+    %%variance
+    xigema = zeros(1, size(data, 2));
+    for idx = 1 : size(data, 2)
+        xigema(idx) = sum((data(:, idx) - averagePow(idx)).^2)/100;
+    end
+    fea(23, :) = xigema;
+    %%peak factor
+    ka = zeros(1, size(data, 2));
+    for idx = 1 : size(data, 2)
+        xrms = sqrt(sum(data(:, idx).^2)/100);
+        xmax = max(data(:, idx));
+        ka(idx) = xmax / xrms;
+    end
+    fea(24, :) = ka;
+    %%energy
+    data_fft = zeros(size(data));
+    for idx = 1 : size(data, 2)
+        data2 = data(:, idx);
+        N = length(data2);
+        y = fftshift(fft(data2));
+        f = ((-N/2:N/2-1)*(48000/N))';
+        data_fft(:, idx) = abs(y).^2/N;
+    end
+    
+    %%average frequency
+    meanfre = mean(data_fft);
+    fea(25, :) = meanfre;
+
+%     FC = zeros(1, size(data, 2));
+%     for idx = 1 : size(data, 2)
+%         FC(idx) = sum(data_fft(:, idx).*f)/sum(data_fft(:, idx));
+%     end
+%     fea(27, :) = FC;
+    %%energy density
+    powermidu = zeros(1, size(data, 2));
+    for idx = 1 : size(data, 2)
+        powermidu(idx) = sum(data(:, idx).^2)/length(data(:, idx));
+    end
+    fea(26, :) = powermidu;
+end
