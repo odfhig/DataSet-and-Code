@@ -1,4 +1,4 @@
-package com.renhui.audiodemo;
+
 
 import android.media.AudioFormat;
 import android.media.AudioRecord;
